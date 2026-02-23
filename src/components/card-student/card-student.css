@@ -1,0 +1,20 @@
+.carte-echec {
+    background-color: #fee2e2;
+    /* bg-red-100 */
+    border-color: #fca5a5;
+    /* border-red-300 */
+}
+
+.carte-passable {
+    background-color: #ffedd5;
+    /* bg-orange-100 */
+    border-color: #fdba74;
+    /* border-orange-300 */
+}
+
+.carte-reussite {
+    background-color: #dcfce7;
+    /* bg-green-100 */
+    border-color: #86efac;
+    /* border-green-300 */
+}

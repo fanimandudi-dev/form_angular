@@ -1,39 +1,27 @@
-<section class="h-[90vh] border-3 w-[100%] flex items-center justify-center">
-
-
-<div class="border-5 border-blue-500  border-dotted flex flex-col w-fit gap-8 px-20 py-15">
-    <div class="">
-        <h1 class="text-blue-500 text-xl font-bold text-center">Bienvenue dans le systeme de <br>gestion de notes </h1>
-        <p class="text-gray-500 text-center font-bold  mt-3 capitalize">systeme de suivi scolaire</p>
-
-
-
+<section class="min-h-[90vh] w-full flex items-center justify-center p-4">
+  <div class="border-4 border-blue-500 border-dotted flex flex-col w-full max-w-2xl gap-8 px-6 py-10 md:px-20 md:py-15 bg-white shadow-sm rounded-lg">
+    
+    <div class="text-center">
+      <h1 class="text-blue-500 text-xl md:text-3xl font-bold leading-tight">
+        Bienvenue dans le système de <br class="hidden md:block"> gestion de notes
+      </h1>
+      <p class="text-gray-500 font-bold mt-3 capitalize text-sm md:text-base">
+        Système de suivi scolaire
+      </p>
     </div>
 
+    <div class="flex flex-col gap-6">
+      <div class="space-y-2 text-gray-700">
+        <p class="text-center font-medium">Professeur : <span class="text-blue-600">{{name_prof}}</span></p>
+        <p class="text-center font-medium">Étudiants : <span class="text-blue-600">{{num_students()}}</span></p>
+      </div>
 
-
-       <div class="flex flex-col gap-5">
-
-        <div>
-            <p class="text-center mb-3">Professeur : </p>
-        <p class="text-center">Etudiant</p>
-
-
-        </div>
-
-        <a class="bg-blue-500 px-28 py-2 font-semibold  text-center rounded-sm h-[50px] text-white" href="">Voir les notes</a>
-
-
-
+      <button 
+        (click)="goto_notes()" 
+        class="bg-blue-500 hover:bg-blue-600 transition-colors w-full py-3 font-semibold text-center rounded-md text-white shadow-md active:scale-95">
+        Voir les notes
+      </button>
     </div>
 
-
-
-
-
-
-
-
-</div>
-
+  </div>
 </section>

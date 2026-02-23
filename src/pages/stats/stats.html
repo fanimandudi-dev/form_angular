@@ -1,11 +1,21 @@
 
-<section class="flex justify-center items-center h-[90vh]  w-[100%] ">
+
+<section class=" h-[90vh]  w-[100%] ">
+     <h1 class="text-2xl font-bold text-blue-500 text-center mt-10 mb-22">Statistiques - Generale</h1>
+   <div class="flex justify-center items-center">
 
 
-<div class=" grid   grid-cols-2 place-items-center gap-y-8 gap-x-4">
+<div class=" grid   grid-cols-1 gap-y-8 gap-x-4 w-[80%] lg:grid-cols-2 w-[70%] ">
 
-<app-card-stat titre_carte="Total etudiant" [valeur]="150"></app-card-stat>
-<app-card-stat titre_carte="Total etudiant" [valeur]="150"></app-card-stat>
-<app-card-stat titre_carte="Total etudiant" [valeur]="150"></app-card-stat>
-<app-card-stat titre_carte="Total etudiant" [valeur]="150"></app-card-stat>
+<app-card-stat titre_carte="TOTAL ETUDIANT" [valeur]="etudiantsSignal().length"></app-card-stat>
+<app-card-stat titre_carte="MOYENNE GENERALE" [valeur]="moyenneGenerale()"></app-card-stat>
+<app-card-stat titre_carte="REUSSITE" color="green" [valeur]="nombreReussites()"></app-card-stat>
+<app-card-stat titre_carte="ECHECS" color="red" [valeur]="nombreEchecs()"></app-card-stat>
 </div>
+
+
+
+
+   </div>
+   </section>
+

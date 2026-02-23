@@ -1,16 +1,34 @@
-<header class="border-2 bg-blue-500 text-white flex justify-between px-8  h-[80px] items-center">
-<div class="text-2xl font-bold">
-    Gestion de Notes
-</div>
+<header class="bg-blue-500 text-white w-full h-[80px] px-4 flex items-center justify-between shadow-md relative z-50">
+  <div class="font-bold text-base md:text-xl shrink-0">
+    Gestion <span class="hidden xs:inline">de Notes</span>
+  </div>
 
-<nav class="mr-[100px]">
-<ul class="flex space-x-6 items-center">
-<li class="border border-white px-5 py-2 rounded-lg bg-white font-bold text-blue-500" ><a routerLink="/accueil">Accueil</a></li>
-<li class=" border border-white px-5 py-2 rounded-lg"><a routerLink="" >Listes de notes</a></li>
-<li class=" border border-white px-5 py-2 rounded-lg"><a routerLink="/stats">Statistiques</a></li>
+  <button (click)="toggleMenu()" class="md:hidden p-2 border border-white rounded">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      @if (!isMenuOpen()) {
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+      } @else {
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      }
+    </svg>
+  </button>
 
-</ul>
+  <nav [ngClass]="{'hidden': !isMenuOpen(), 'flex': isMenuOpen()}" 
+       class="absolute top-[80px] left-0 w-full bg-blue-600 flex-col p-4 space-y-4 md:static md:w-auto md:bg-transparent md:flex md:flex-row md:space-y-0 md:space-x-4 md:p-0 md:flex">
+    
+    <a routerLink="/accueil" routerLinkActive="bg-white text-blue-500" (click)="isMenuOpen.set(false)"
+       class="border border-white px-3 py-2 rounded-lg font-bold text-center transition-colors hover:bg-white hover:text-blue-500">
+       Accueil
+    </a>
 
-</nav>
+    <a routerLink="/liste-notes" routerLinkActive="bg-white text-blue-500" (click)="isMenuOpen.set(false)"
+       class="border border-white px-3 py-2 rounded-lg text-center transition-colors hover:bg-white hover:text-blue-500">
+       Notes
+    </a>
 
+    <a routerLink="/stats" routerLinkActive="bg-white text-blue-500" (click)="isMenuOpen.set(false)"
+       class="border border-white px-3 py-2 rounded-lg text-center transition-colors hover:bg-white hover:text-blue-500">
+       Stats
+    </a>
+  </nav>
 </header>

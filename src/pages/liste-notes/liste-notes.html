@@ -1,0 +1,40 @@
+<section class=" h-[90vh] w-[100%] ">
+
+<h1 class="text-2xl font-bold mb-6 mt-5 text-center text-blue-500">Listes des Etudiants</h1>
+<div class="flex justify-center h-[40px] items-center mb-15">  <p class=" mr-5">Filtrer par :</p>
+<p class=" mr-5">{{filtre()}}</p>
+<select [ngModel]="filtre()" (ngModelChange)="filtre.set($event)" class="p-1 border rounded">
+<option value="Tous">Tous</option> 
+
+<option value="3ème">3 ème</option>
+<option value="4ème">4 ème</option> 
+<option value="5ème">5 ème</option> 
+<option value="6ème">6 ème</option> 
+</select> 
+</div>
+
+
+<div class="flex justify-center items-center"> 
+
+
+<div class=" grid grid-cols-1 px-2 gap-5   md:grid-cols-2 gap-6 w-[95%] md:px-4 lg:grid-cols-3" >
+
+
+
+ <app-card-student *ngFor="let etudiant of liste_etudiant()" [etudiant]="etudiant" 
+[moyenne]="Moyenne(etudiant.notes)"
+(delete)="supprimer($event)"
+ [badge]="badge_color(Moyenne(etudiant.notes))"
+[cardcolor]="card_color(Moyenne(etudiant.notes))"
+ >
+</app-card-student>
+
+
+
+
+</div>
+</div>
+
+
+
+    </section>
