@@ -1,0 +1,67 @@
+<div class="bg-white rounded-3xl shadow-xl border border-slate-100 p-6 sticky top-10">
+  
+  <div class="flex items-center justify-between mb-8 border-b border-slate-50 pb-4">
+    <h2 class="text-xl font-bold text-slate-800 tracking-tight">Mon Panier</h2>
+    <span class="bg-slate-900 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+      {{ items.length }}
+    </span>
+  </div>
+
+  <div class="space-y-4 mb-8 max-h-[450px] overflow-y-auto pr-2 custom-scrollbar">
+    
+    @for (item of items; track item.id) {
+      <div class="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-transparent hover:border-slate-200 transition-all group">
+        
+        <div class="w-16 h-16 bg-white rounded-xl flex-shrink-0 overflow-hidden border border-slate-100">
+          @if (item.image) {
+            <img [src]="item.image" class="w-full h-full object-cover">
+          } @else {
+            <div class="flex items-center justify-center h-full text-xl bg-slate-100 text-slate-400">📦</div>
+          }
+        </div>
+
+        <div class="flex-1 min-w-0">
+          <h4 class="text-sm font-bold text-slate-800 truncate">{{ item.nom }}</h4>
+          <p class="text-blue-600 font-black text-sm">{{ item.prix }}€</p>
+        </div>
+
+        <button 
+          (click)="supprimerArticle(item.id)"
+          class="text-slate-300 hover:text-red-500 hover:bg-red-50 p-2 rounded-xl transition-all"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+        </button>
+      </div>
+    } @empty {
+      <div class="py-12 text-center">
+        <p class="text-slate-400 font-medium italic">Votre panier est vide</p>
+      </div>
+    }
+
+  </div>
+
+  @if (items.length > 0) {
+    <div class="border-t border-dashed border-slate-200 pt-6">
+      <div class="flex justify-between items-center mb-6">
+        <span class="text-slate-500 font-medium">Total à régler</span>
+        <span class="text-3xl font-black text-slate-900">{{ calculerTotal() }}€</span>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <button class="w-full bg-slate-900 hover:bg-blue-600 text-white font-bold py-4 rounded-2xl shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2">
+          <span>Payer maintenant</span>
+        </button>
+
+        <button 
+          (click)="viderLePanier()"
+          class="w-full text-slate-400 hover:text-red-500 text-sm font-bold transition-colors py-2"
+        >
+          Vider le panier
+        </button>
+      </div>
+    </div>
+  }
+
+</div>

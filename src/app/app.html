@@ -1,3 +1,31 @@
-<app-header></app-header>
-<router-outlet></router-outlet>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+<main class="min-h-screen bg-slate-50 p-6">
+  <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
+    
+    <div class="flex-1">
+      <h2 class="text-2xl font-bold text-slate-800 mb-6">Catalogue Produits</h2>
+      <app-card-produit></app-card-produit>
+    </div>
+
+    <div class="w-full lg:w-96">
+      <app-panier> </app-panier>
+    </div>
+
+  </div>
+
+  <router-outlet></router-outlet>
+</main>
+    
+</body>
+</html>
+
+
 

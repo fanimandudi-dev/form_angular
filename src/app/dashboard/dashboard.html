@@ -1,0 +1,69 @@
+<!-- <div class="p-6 bg-gray-50 min-h-screen">
+  <header class="mb-8">
+    <h1 class="text-2xl font-bold text-gray-800">Tableau de Bord Coordination</h1>
+    <p class="text-gray-500">Suivi de l'intercession en temps réel</p>
+  </header>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div *ngFor="let item of stats" class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 font-medium">{{ item.label }}</p>
+          <p class="text-3xl font-bold text-gray-900 mt-1">{{ item.value }}</p>
+        </div>
+        <div [class]="item.color" class="p-3 rounded-xl text-white">
+          <span class="font-bold">#</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+      <h3 class="text-lg font-bold text-gray-800 mb-4">Flux des Intercesseurs</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead>
+            <tr class="text-gray-400 text-sm uppercase">
+              <th class="pb-4 font-medium">Intercesseur</th>
+              <th class="pb-4 font-medium">Action</th>
+              <th class="pb-4 font-medium">Heure</th>
+              <th class="pb-4 font-medium">Session</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-50">
+            <tr *ngFor="let act of recentActivities" class="hover:bg-gray-50 transition-colors">
+              <td class="py-4 font-semibold text-gray-700">{{ act.intercesseur }}</td>
+              <td class="py-4">
+                <span class="px-3 py-1 rounded-full text-xs font-medium" 
+                      [ngClass]="{'bg-green-100 text-green-700': act.action === 'Présence marquée', 
+                                 'bg-yellow-100 text-yellow-700': act.action === 'Retard signalé'}">
+                  {{ act.action }}
+                </span>
+              </td>
+              <td class="py-4 text-gray-500 text-sm">{{ act.heure }}</td>
+              <td class="py-4 text-gray-600 font-medium">{{ act.session }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      <div class="bg-blue-700 rounded-2xl p-6 text-white shadow-lg">
+        <h3 class="font-bold mb-2">Lancer un appel</h3>
+        <p class="text-blue-100 text-sm mb-4">Commencez le pointage pour la session actuelle.</p>
+        <button class="w-full bg-white text-blue-700 py-3 rounded-xl font-bold hover:bg-blue-50 transition-colors">
+          Nouvelle Séance
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+        <h3 class="font-bold text-gray-800 mb-2 text-center">Exportation</h3>
+        <button class="w-full border border-gray-200 text-gray-700 py-2 rounded-lg text-sm font-medium hover:bg-gray-50">
+           Télécharger le rapport PDF
+        </button>
+      </div>
+    </div>
+  </div>
+</div> -->
