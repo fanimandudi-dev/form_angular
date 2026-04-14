@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { inject ,Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router'; // <-- CORRECTION : Router vient d'ici
 
@@ -12,9 +12,10 @@ import { RouterModule, Router } from '@angular/router'; // <-- CORRECTION : Rout
 })
 export class Login implements OnInit {
   loginForm!: FormGroup;
+  private router = inject(Router);
 
   // On injecte le Router d'Angular, pas celui d'Express
-  constructor(private fb: FormBuilder, private router: Router) { }
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -26,7 +27,9 @@ export class Login implements OnInit {
   onLogin() {
     if (this.loginForm.valid) {
       // Pour l'instant, on se contente de logger les infos de l'intercesseur
+
       console.log('Tentative de connexion...', this.loginForm.value);
+      this.router.navigate(['/dashboard']);
     }
   }
 }
