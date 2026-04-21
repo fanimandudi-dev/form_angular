@@ -3,9 +3,10 @@ import { CardProduit } from "./component-e-com/card-produit/card-produit";
 import { RouterModule } from "@angular/router";
 import { Panier } from "./component-e-com/panier/panier";
 import { Articles } from "./detail_articles/articles/articles";
+import { Menu } from './menu/menu';
 @Component({
   selector: 'app-root',
-  imports: [CardProduit, RouterModule, Panier, Articles],
+  imports: [CardProduit, RouterModule, Panier, Articles,Menu],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
