@@ -2,9 +2,10 @@ import { Component, inject } from '@angular/core';
 import { CardProduit } from "./component-e-com/card-produit/card-produit";
 import { RouterModule } from "@angular/router";
 import { Panier } from "./component-e-com/panier/panier";
+import { Articles } from "./detail_articles/articles/articles";
 @Component({
   selector: 'app-root',
-  imports: [CardProduit, RouterModule, Panier],
+  imports: [CardProduit, RouterModule, Panier, Articles],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
