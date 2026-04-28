@@ -29,6 +29,7 @@ export class Articles implements OnInit {
 
   // Logique de filtrage simple
   filtrer(cat: string) {
+    this.categorieActuelle = cat;
     if (cat === 'Tous') {
      return this.tout_produit();
     }

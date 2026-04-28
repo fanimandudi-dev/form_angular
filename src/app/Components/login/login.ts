@@ -1,62 +1,72 @@
-import { Component, inject } from '@angular/core';
-
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { AuthService } from '../../mes_services/auth.service';
+import { AuthentServices } from '../../detail_articles/non-auto/authent-services';
+
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   template: `
-    <div class="login-container">
-      <h2>Connexion</h2>
+    <div class="login-card">
+      <h2>{{ auth.isAuthenticated() ? 'Tableau de bord' : 'Connexion' }}</h2>
       
-      <div *ngIf="!auth.isAuthenticated()">
-        <input [(ngModel)]="username" placeholder="Username" />
-        <input [(ngModel)]="password" type="password" placeholder="Password" />
-        <button (click)="login()">Se connecter</button>
-      </div>
-
-      <div *ngIf="auth.isAuthenticated()">
-        <p>Connecté en tant que : {{ auth.currentUser }}</p>
-        <button (click)="logout()">Se déconnecter</button>
-      </div>
+      @if (!auth.isAuthenticated()) {
+        <div class="form-group">
+          <input [(ngModel)]="username" placeholder="Nom d'utilisateur" />
+          <input [(ngModel)]="password" type="password" placeholder="Mot de passe" />
+          <button (click)="onLogin()">Entrer</button>
+          
+          @if (errorMessage()) {
+            <p class="error">{{ errorMessage() }}</p>
+          }
+        </div>
+      } @else {
+        <div class="welcome-box">
+          <p>Bienvenue, <strong>{{ auth.currentUser()?.nom }}</strong></p>
+          <span class="badge">{{ auth.currentUser()?.role }}</span>
+          <button class="btn-logout" (click)="auth.logout()">Déconnexion</button>
+        </div>
+      }
     </div>
   `,
   styles: [`
-    .login-container {
-      padding: 20px;
-      border: 2px solid #333;
-      margin: 20px;
+    .login-card { 
+      max-width: 350px; margin: 50px auto; padding: 2rem;
+      border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      background: white; font-family: sans-serif; text-align: center;
     }
-    input {
-      margin: 5px;
-      padding: 8px;
+    .form-group input { 
+      width: 90%; padding: 12px; margin: 10px 0;
+      border: 1px solid #ddd; border-radius: 6px; 
     }
-    button {
-      margin: 5px;
-      padding: 8px 15px;
-      cursor: pointer;
+    button { 
+      width: 100%; padding: 12px; background: #007bff;
+      color: white; border: none; border-radius: 6px; cursor: pointer;
     }
+    .error { color: #dc3545; font-size: 0.9rem; margin-top: 10px; }
+    .badge { 
+      background: #e9ecef; padding: 4px 12px; 
+      border-radius: 20px; font-size: 0.8rem; display: inline-block; margin-bottom: 15px;
+    }
+    .btn-logout { background: #6c757d; margin-top: 10px; }
   `]
 })
 export class LoginComponent {
-  auth = inject(AuthService);
+  auth = inject(AuthentServices);
+
   username = '';
   password = '';
+  errorMessage = signal(''); // Signal pour gérer les erreurs localement
 
-  login() {
+  onLogin() {
+    this.errorMessage.set(''); // Reset erreur
+
     if (this.auth.login(this.username, this.password)) {
-      alert('Connexion réussie !');
       this.username = '';
       this.password = '';
     } else {
-      alert('Échec de connexion');
+      this.errorMessage.set('Identifiants invalides. Réessayez.');
     }
-  }
-
-  logout() {
-    this.auth.logout();
   }
 }
