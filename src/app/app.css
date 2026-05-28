@@ -1,0 +1,28 @@
+.fade-in {
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.transition-row {
+    transition: all 0.2s ease-in-out;
+}
+
+.transition-row:hover {
+    background-color: #f8f9fa !important;
+    border-color: #0d6efd !important;
+}
+
+.text-muted-white {
+    color: rgba(255, 255, 255, 0.75);
+}

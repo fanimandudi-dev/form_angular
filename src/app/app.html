@@ -1,19 +1,168 @@
-<!-- 
-<main class="min-h-screen bg-slate-50 p-6">
-  <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
-    
-    <div class="flex-1">
-      <h2 class="text-2xl font-bold text-slate-800 mb-6">Catalogue Produits</h2>
-      <app-card-produit></app-card-produit>
-    </div>
+<div class="max-w-4xl mx-auto my-8 p-4 font-sans text-gray-800 relative">
 
-    <div class="w-full lg:w-96">
-      <app-panier> </app-panier>
-    </div>
-
+  <!-- Notification / Alerte de Confirmation Flash -->
+  <div *ngIf="notificationMessage"
+    class="fixed top-4 right-4 bg-gray-900 text-white px-4 py-3 rounded shadow-md z-50 flex items-center gap-2 border border-gray-700 transition-all">
+    <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+    <span class="text-sm font-medium">{{ notificationMessage }}</span>
   </div>
 
+  <h1 class="text-2xl font-bold border-b pb-2 mb-6 text-gray-900">Formulaire de commande</h1>
 
-</main> -->
+  <form [formGroup]="commandeForm" (ngSubmit)="onCommandeSubmit()" class="space-y-6">
 
-<router-outlet></router-outlet>
+    <!-- Client et Livraison côte à côte -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- Infos Client -->
+      <div class="border p-4 rounded bg-white" formGroupName="client">
+        <h2 class="text-lg font-semibold mb-4 text-gray-700">1. Informations client</h2>
+
+        <div class="grid grid-cols-2 gap-2 mb-3">
+          <div>
+            <label class="block text-xs font-medium mb-1">Prénom</label>
+            <input type="text" formControlName="prenom" class="w-full border p-2 text-sm rounded">
+          </div>
+          <div>
+            <label class="block text-xs font-medium mb-1">Nom</label>
+            <input type="text" formControlName="nom" class="w-full border p-2 text-sm rounded">
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="block text-xs font-medium mb-1">Email</label>
+          <input type="email" formControlName="email" class="w-full border p-2 text-sm rounded">
+          <span *ngIf="commandeForm.get('client.email')?.touched && commandeForm.get('client.email')?.invalid"
+            class="text-xs text-red-600">Email invalide</span>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium mb-1">Téléphone</label>
+          <input type="text" formControlName="telephone" placeholder="10 chiffres"
+            class="w-full border p-2 text-sm rounded">
+          <span *ngIf="commandeForm.get('client.telephone')?.touched && commandeForm.get('client.telephone')?.invalid"
+            class="text-xs text-red-600">Doit contenir 10 chiffres</span>
+        </div>
+      </div>
+
+      <!-- Adresse Livraison -->
+      <div class="border p-4 rounded bg-white" formGroupName="livraison">
+        <h2 class="text-lg font-semibold mb-4 text-gray-700">2. Adresse de livraison</h2>
+
+        <div class="mb-3">
+          <label class="block text-xs font-medium mb-1">Adresse</label>
+          <input type="text" formControlName="adresse" class="w-full border p-2 text-sm rounded">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 mb-3">
+          <div>
+            <label class="block text-xs font-medium mb-1">Ville</label>
+            <input type="text" formControlName="ville" class="w-full border p-2 text-sm rounded">
+          </div>
+          <div>
+            <label class="block text-xs font-medium mb-1">Code postal</label>
+            <input type="text" formControlName="codePostal" placeholder="5 chiffres"
+              class="w-full border p-2 text-sm rounded">
+            <span
+              *ngIf="commandeForm.get('livraison.codePostal')?.touched && commandeForm.get('livraison.codePostal')?.invalid"
+              class="text-xs text-red-600">5 chiffres requis</span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium mb-1">Pays</label>
+          <input type="text" formControlName="pays" class="w-full border p-2 text-sm rounded">
+        </div>
+      </div>
+    </div>
+
+    <!-- Tableau des Articles -->
+    <div class="border p-4 rounded bg-white">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold text-gray-700">3. Articles</h2>
+        <button type="button" (click)="ajouterArticle()"
+          class="border border-blue-600 text-blue-600 px-3 py-1 text-xs rounded hover:bg-blue-50">
+          + Ajouter un produit
+        </button>
+      </div>
+
+      <div formArrayName="articles" class="space-y-2">
+        <div *ngFor="let item of articles.controls; let i=index" [formGroupName]="i"
+          class="flex flex-col md:flex-row gap-2 items-start md:items-center border-b pb-2 md:pb-0 md:border-0">
+
+          <div class="w-full md:flex-1">
+            <input type="text" formControlName="produit" placeholder="Nom du produit"
+              class="w-full border p-2 text-sm rounded">
+          </div>
+
+          <div class="w-24">
+            <input type="number" formControlName="quantite" placeholder="Qté" class="w-full border p-2 text-sm rounded">
+          </div>
+
+          <div class="w-28">
+            <input type="number" formControlName="prix" placeholder="Prix (€)"
+              class="w-full border p-2 text-sm rounded">
+          </div>
+
+          <div class="w-28 bg-gray-50 p-2 text-sm rounded border text-right font-mono">
+            {{ (item.get('quantite')?.value || 0) * (item.get('prix')?.value || 0) | number:'1.2-2' }} €
+          </div>
+
+          <button type="button" (click)="supprimerArticle(i)" [disabled]="articles.length <= 1"
+            class="text-red-600 text-sm p-2 disabled:opacity-30">
+            Supprimer
+          </button>
+        </div>
+      </div>
+
+      <!-- Erreur validation croisée -->
+      <div *ngIf="commandeForm.hasError('tropArticles')"
+        class="mt-3 p-2 bg-red-50 text-red-700 text-xs rounded border border-red-200">
+        La quantité totale d'articles ne doit pas dépasser 50 (Actuellement : {{ totalArticles }}).
+      </div>
+    </div>
+
+    <!-- Code Promo et Total -->
+    <div
+      class="border p-4 rounded bg-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div>
+        <label class="block text-xs font-medium mb-1">Code promo (Optionnel)</label>
+        <div class="flex gap-2 items-center">
+          <input type="text" formControlName="codePromo" placeholder="Ex: PROMO20"
+            class="border p-2 text-sm rounded uppercase">
+          <span *ngIf="commandeForm.get('codePromo')?.status === 'PENDING'"
+            class="text-xs text-gray-500">Vérification...</span>
+        </div>
+        <span
+          *ngIf="commandeForm.get('codePromo')?.status === 'VALID' && commandeForm.get('codePromo')?.value === 'PROMO20'"
+          class="text-xs text-green-600 block mt-1">Code valide (-20%)</span>
+        <span *ngIf="commandeForm.get('codePromo')?.hasError('codeInvalide')"
+          class="text-xs text-red-600 block mt-1">Code invalide</span>
+      </div>
+
+      <div class="text-right bg-gray-100 p-3 rounded border w-full sm:w-auto">
+        <span class="text-xs text-gray-500 uppercase block">Total à payer</span>
+        <span class="text-xl font-bold font-mono text-gray-900">{{ totalGeneral | number:'1.2-2' }} €</span>
+      </div>
+    </div>
+
+    <!-- Validation finale -->
+    <div class="text-right">
+      <button type="submit" [disabled]="commandeForm.invalid || commandeForm.status === 'PENDING'"
+        class="bg-blue-600 text-white px-6 py-2.5 rounded text-sm font-medium hover:bg-blue-700 disabled:bg-gray-300 disabled:text-gray-500">
+        Valider la commande
+      </button>
+    </div>
+  </form>
+
+  <!-- Récapitulatif simple après envoi -->
+  <div *ngIf="commandeAffichee" class="mt-8 border border-gray-300 rounded bg-gray-50 p-4">
+    <h3 class="text-md font-bold mb-2 text-gray-800">Résumé de la commande validée</h3>
+    <p class="text-sm"><strong>Client :</strong> {{ commandeAffichee.client.prenom }} {{ commandeAffichee.client.nom }}
+      ({{ commandeAffichee.client.telephone }})</p>
+    <p class="text-sm"><strong>Livraison :</strong> {{ commandeAffichee.livraison.adresse }}, {{
+      commandeAffichee.livraison.codePostal }} {{ commandeAffichee.livraison.ville }}</p>
+    <p class="text-sm mt-2"><strong>Montant total traité :</strong> {{ totalGeneral | number:'1.2-2' }} €</p>
+  </div>
+
+</div>

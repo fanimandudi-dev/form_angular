@@ -1,95 +1,128 @@
-import { Component, inject } from '@angular/core';
-import { CardProduit } from "./component-e-com/card-produit/card-produit";
-import { RouterModule } from "@angular/router";
-import { Panier } from "./component-e-com/panier/panier";
-import { Articles } from "./detail_articles/articles/articles";
-import { Menu } from './menu/menu';
+import { Component, OnInit } from '@angular/core';
+
+import { FormBuilder, FormGroup, FormArray, Validators, AbstractControl, ValidationErrors, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Observable, timer } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 @Component({
   selector: 'app-root',
-  imports: [CardProduit, RouterModule, Panier, Articles,Menu],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
- 
+export class App implements OnInit {
+  commandeForm!: FormGroup;
+  commandeAffichee: any = null;
+  notificationMessage: string | null = null; // Pour la notification de confirmation
+
+  constructor(private fb: FormBuilder) { }
+
+  ngOnInit(): void {
+    this.initForm();
+    this.ecouterCalculs();
+  }
+
+  private initForm(): void {
+    this.commandeForm = this.fb.group({
+      client: this.fb.group({
+        prenom: ['', Validators.required],
+        nom: ['', Validators.required],
+        email: ['', [Validators.required, Validators.email]],
+        telephone: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]]
+      }),
+      livraison: this.fb.group({
+        adresse: ['', Validators.required],
+        ville: ['', Validators.required],
+        codePostal: ['', [Validators.required, Validators.pattern(/^[0-9]{5}$/)]],
+        pays: ['', Validators.required]
+      }),
+      articles: this.fb.array([this.creerArticle()]),
+      codePromo: ['', [], [this.validateurCodePromo]]
+    }, {
+      validators: [this.validateurQuantiteTotale]
+    });
+  }
+
+  creerArticle(): FormGroup {
+    return this.fb.group({
+      produit: ['', Validators.required],
+      quantite: [1, [Validators.required, Validators.min(1)]],
+      prix: [0, [Validators.required, Validators.min(0)]],
+      total: [{ value: 0, disabled: true }]
+    });
+  }
+
+  get articles(): FormArray {
+    return this.commandeForm.get('articles') as FormArray;
+  }
+
+  ajouterArticle(): void {
+    this.articles.push(this.creerArticle());
+  }
+
+  supprimerArticle(index: number): void {
+    if (this.articles.length > 1) {
+      this.articles.removeAt(index);
+    }
+  }
+
+  private ecouterCalculs(): void {
+    this.articles.valueChanges.subscribe(() => {
+      this.articles.controls.forEach((control) => {
+        const group = control as FormGroup;
+        const qte = group.get('quantite')?.value || 0;
+        const pu = group.get('prix')?.value || 0;
+        group.get('total')?.setValue(qte * pu, { emitEvent: false });
+      });
+    });
+  }
+
+  get totalArticles(): number {
+    return this.articles.controls.reduce((sum, ctrl) => sum + (ctrl.get('quantite')?.value || 0), 0);
+  }
+
+  get totalGeneral(): number {
+    let total = this.articles.controls.reduce((sum, ctrl) => {
+      return sum + ((ctrl.get('quantite')?.value || 0) * (ctrl.get('prix')?.value || 0));
+    }, 0);
+
+    const promo = this.commandeForm.get('codePromo')?.value;
+    if (this.commandeForm.get('codePromo')?.valid && promo === 'PROMO20') {
+      total *= 0.8;
+    }
+    return total;
+  }
+
+  private validateurQuantiteTotale(control: AbstractControl): ValidationErrors | null {
+    const arr = control.get('articles') as FormArray;
+    if (!arr) return null;
+    const total = arr.controls.reduce((sum, ctrl) => sum + (ctrl.get('quantite')?.value || 0), 0);
+    return total > 50 ? { tropArticles: true } : null;
+  }
+
+  private validateurCodePromo(control: AbstractControl): Observable<ValidationErrors | null> {
+    return timer(1000).pipe(
+      map(() => {
+        const code = control.value;
+        if (!code) return null;
+        return code === 'PROMO20' ? null : { codeInvalide: true };
+      })
+    );
+  }
+
+  onCommandeSubmit(): void {
+    if (this.commandeForm.valid) {
+      this.commandeAffichee = this.commandeForm.getRawValue();
+
+      // Déclenchement de la notification de confirmation
+      this.notificationMessage = "Votre commande a bien été enregistrée !";
+
+      // Disparition automatique après 4 secondes
+      setTimeout(() => {
+        this.notificationMessage = null;
+      }, 4000);
+    }
+  }
 }
-
-
-
-
-
-
-// import { Component, inject } from '@angular/core';
-// import { CommonModule} from '@angular/common';
-// import { LoginComponent } from './Components/login/login';
-// import { TaskList } from './Components/task-list/task-list';
-// import { TaskForm } from './Components/task-form/task-form';
-// import { AuthService } from './mes_services/auth.service';
-
-
-// @Component({
-//   selector: 'app-root',
-//   standalone: true,
-//   imports: [CommonModule, LoginComponent, TaskList, TaskForm],
-//   template: `
-//     <div class="app">
-//       <h1>🚀 Task Manager - Angular DI Demo</h1>
-      
-//       <app-login></app-login>
-
-//       <div *ngIf="auth.isAuthenticated()">
-//         <app-task-form></app-task-form>
-//         <app-task-list></app-task-list>
-//       </div>
-
-//       <div *ngIf="!auth.isAuthenticated()" class="locked">
-//         <p>🔒 Connectez-vous pour accéder aux tâches</p>
-//       </div>
-//     </div>
-//   `,
-//   styles: [`
-//     .app {
-//       font-family: Arial, sans-serif;
-//       max-width: 800px;
-//       margin: 0 auto;
-//     }
-//     h1 {
-//       text-align: center;
-//       color: #333;
-//     }
-//     .locked {
-//       text-align: center;
-//       padding: 40px;
-//       background: #f0f0f0;
-//       border-radius: 10px;
-//       margin: 20px;
-//     }
-//   `]
-// })
-// export class App {
-//   auth = inject(AuthService);
-// }
-
-
-// import { Component, signal } from '@angular/core';
-// import { RouterOutlet } from '@angular/router';
-// import { Header } from '../components/header/header';
-// import { Accueil } from '../pages/accueil/accueil';
-// import {CardStat } from '../components/card-stat/card-stat';
-// import { Ecran } from './ecran/ecran';
-// import { Meteo } from "./meteo/meteo";
-// import { CarteFilm } from "./carte-film/carte-film";
-// import { Login } from "./login/login";
-// import { Dashboard } from "./dashboard/dashboard";
-// import { Menu } from "./menu/menu";
-// import { Button } from "./button/button";
-
-// @Component({
-//   selector: 'app-root',
-//   imports: [RouterOutlet, Header, CardStat, Ecran, Meteo, CarteFilm, Login, Dashboard, Menu, Button],
-//   templateUrl: './app.html',
-//   styleUrl: './app.css'
-// })
-// export class App {
- 
-// }
