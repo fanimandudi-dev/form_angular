@@ -4,11 +4,13 @@ import { FormBuilder, FormGroup, FormArray, Validators, AbstractControl, Validat
 import { CommonModule } from '@angular/common';
 import { Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Task } from "./directives/task/task";
+import { CardApi } from "./card-api/card-api";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, Task, CardApi],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -17,7 +19,7 @@ export class App implements OnInit {
   commandeAffichee: any = null;
   notificationMessage: string | null = null; // Pour la notification de confirmation
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder) {  }
 
   ngOnInit(): void {
     this.initForm();
@@ -48,8 +50,8 @@ export class App implements OnInit {
   creerArticle(): FormGroup {
     return this.fb.group({
       produit: ['', Validators.required],
-      quantite: [1, [Validators.required, Validators.min(1)]],
-      prix: [0, [Validators.required, Validators.min(0)]],
+      quantite: [, [Validators.required, Validators.min(1)]],
+      prix: [, [Validators.required, Validators.min(0)]],
       total: [{ value: 0, disabled: true }]
     });
   }
