@@ -11,12 +11,13 @@ import { authGuard } from './detail_articles/auth-guard';
 import { adminGuardGuard } from './detail_articles/admin-guard-guard';
 import { ErrorPage } from './detail_articles/error-page/error-page';
 import { NonAuto } from './detail_articles/non-auto/non-auto';
+import { CardApi } from './card-api/card-api';
 
 
 export const routes: Routes = [
 
 
-  { path: '' ,redirectTo: 'login' ,pathMatch:'full'},
+  { path: '' ,redirectTo: 'Cartes' ,pathMatch:'full'},
     
     
   { path: 'Articles', 
@@ -27,7 +28,7 @@ export const routes: Routes = [
   { path: 'erreur', component: NonAuto },
  
 
-    { path: 'login', component: Login },
+    { path: 'Cartes', component:CardApi },
   {
     path: 'dashboard',canActivate: [authGuard, adminGuardGuard] ,
     loadComponent: () => import('./dashboard/dashboard').then(m => m.Dashboard)
